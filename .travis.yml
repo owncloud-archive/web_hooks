@@ -8,4 +8,4 @@ before_install:
   - tests/before_install.sh
 
 script:
-  - phpunit --configuration tests/phpunit.xml
+  - cd ../core/apps/web_hooks; phpunit --configuration tests/phpunit.xml
