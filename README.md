@@ -1,5 +1,15 @@
+#The Contacts app
+
+Build status
+------------
+
+| branch      | status |
+| ----------- | ------ |
+| master      | [![Build Status](https://travis-ci.org/owncloud/web_hooks.png?branch=master)](https://travis-ci.org/owncloud/web_hooks) |
+
+
 How to test the web hooks
-=========================
+-------------------------
 
 1. Create a new RequestBin at http://requestb.in/
 
