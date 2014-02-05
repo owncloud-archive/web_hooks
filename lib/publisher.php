@@ -30,6 +30,10 @@ class Publisher {
 
 	public $addNotificationsFunction = null;
 
+	private $barriers;
+	private $notifications;
+	private $subscriptions;
+
 	/**
 	 * @param array $barriers of given quota barriers which are to be used to fire a quota change
 	 */

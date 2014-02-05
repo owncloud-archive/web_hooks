@@ -102,7 +102,7 @@ class Cron {
 			'X-ownCloud-Event: ' . $topic,
 		));
 
-		$data = curl_exec($request);
+		curl_exec($request);
 		$code = curl_getinfo($request, CURLINFO_HTTP_CODE);
 		curl_close($request);
 		if ($code >= 200 && $code < 300) {
