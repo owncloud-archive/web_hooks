@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<info>
+	<id>web_hooks</id>
+	<name>Web-Hooks</name>
+	<licence>AGPL</licence>
+	<author>Thomas Müller</author>
+	<require>5</require>
+	<description>Web-Hooks based on pubsubhubbub</description>
+	<types>
+	</types>
+	<shipped>true</shipped>
+</info>
