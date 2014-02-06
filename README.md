@@ -1,4 +1,4 @@
-#The Web Hooks app - ownCloud goes puhsubbubhub
+#Web Hooks - ownCloud goes puhsubbubhub
 
 Build status
 ------------
