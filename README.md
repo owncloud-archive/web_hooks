@@ -7,6 +7,8 @@ Build status
 | ----------- | ------ |
 | master      | [![Build Status](https://travis-ci.org/owncloud/web_hooks.png?branch=master)](https://travis-ci.org/owncloud/web_hooks) |
 
+Quality: [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/owncloud/web_hooks/badges/quality-score.png?s=9dfd4fe5f4b771561de13ac9d16bf24d4204cc52)](https://scrutinizer-ci.com/g/owncloud/web_hooks/)
+
 
 How to test the web hooks
 -------------------------
