@@ -1,4 +1,4 @@
-#The Contacts app
+#The Web Hooks app - ownCloud goes puhsubbubhub
 
 Build status
 ------------
