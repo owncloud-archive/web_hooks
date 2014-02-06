@@ -9,4 +9,4 @@ before_install:
 
 script:
   - cd ../core/apps/web_hooks; phpunit --configuration tests/phpunit.xml
-  - php tests/coverage-checker.php clover.xml 75
+  - php ../core/apps/web_hooks/tests/coverage-checker.php clover.xml 75
