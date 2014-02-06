@@ -8,5 +8,5 @@ before_install:
   - tests/before_install.sh
 
 script:
-  - cd ../core/apps/web_hooks; phpunit --configuration tests/phpunit.xml
+  - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
   - php ../core/apps/web_hooks/tests/coverage-checker.php clover.xml 75
