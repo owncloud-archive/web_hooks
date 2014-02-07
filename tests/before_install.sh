@@ -12,10 +12,7 @@ cd ..
 git clone --depth 1 https://github.com/owncloud/core
 cd core
 git submodule update --init
-touch config/config.php
 
-# would be great to have a install.sh or console command ...
-./autotest.sh sqlite x x
 cd apps
 cp -R ../../web_hooks/ .
 cd $WORKDIR
