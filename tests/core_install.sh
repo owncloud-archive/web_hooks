@@ -7,7 +7,8 @@
 #
 
 DATABASENAME=travis
-DATABASEUSER=
+DATABASEUSER=travis
+#DATABASEPASSWORD=
 ADMINLOGIN=admin
 BASEDIR=$PWD
 
@@ -60,7 +61,7 @@ cat > ./tests/autoconfig-mysql.php <<DELIM
   'dbuser' => '$DATABASEUSER',
   'dbname' => '$DATABASENAME',
   'dbhost' => 'localhost',
-  'dbpass' => 'owncloud',
+  'dbpass' => '',
 );
 DELIM
 
@@ -76,7 +77,7 @@ cat > ./tests/autoconfig-pgsql.php <<DELIM
   'dbuser' => '$DATABASEUSER',
   'dbname' => '$DATABASENAME',
   'dbhost' => 'localhost',
-  'dbpass' => 'owncloud',
+  'dbpass' => '',
 );
 DELIM
 
