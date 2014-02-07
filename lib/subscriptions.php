@@ -35,26 +35,26 @@ class Subscriptions {
 	}
 
 	public function delete($callback, $topic) {
-		$sql = 'DELETE `*PREFIX*hub_subscriptions` WHERE `callback` = ? AND `topic` = ?';
+		$sql = 'DELETE FROM`*PREFIX*hub_subscriptions` WHERE `callback` = ? AND `topic` = ?';
 		\OC_DB::executeAudited($sql, array($callback, $topic));
 	}
 
 	public function allByTopic($topic) {
-		$sql = 'SELECT * from `*PREFIX*hub_subscriptions` WHERE `topic` = ?';
+		$sql = 'SELECT * FROM `*PREFIX*hub_subscriptions` WHERE `topic` = ?';
 		$result = \OC_DB::executeAudited($sql, array($topic));
 
 		return $result->fetchAll();
 	}
 
 	public function getById($id) {
-		$sql = 'SELECT * from `*PREFIX*hub_subscriptions` WHERE `id` = ?';
+		$sql = 'SELECT * FROM `*PREFIX*hub_subscriptions` WHERE `id` = ?';
 		$result = \OC_DB::executeAudited($sql, array($id));
 
 		return $result->fetchRow();
 	}
 
 	public function deleteById($id) {
-		$sql = 'DELETE `*PREFIX*hub_subscriptions` WHERE `id` = ?';
+		$sql = 'DELETE FROM `*PREFIX*hub_subscriptions` WHERE `id` = ?';
 		\OC_DB::executeAudited($sql, array($id));
 	}
 }
