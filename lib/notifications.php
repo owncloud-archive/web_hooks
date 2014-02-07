@@ -35,12 +35,12 @@ class Notifications {
 	}
 
 	public function deleteById($id) {
-		$sql = 'DELETE `*PREFIX*hub_notifications` WHERE `id` = ?';
+		$sql = 'DELETE FROM `*PREFIX*hub_notifications` WHERE `id` = ?';
 		\OC_DB::executeAudited($sql, array($id));
 	}
 
 	public function deleteAll() {
-		$sql = 'DELETE `*PREFIX*hub_notifications`';
+		$sql = 'DELETE FROM `*PREFIX*hub_notifications`';
 		\OC_DB::executeAudited($sql);
 	}
 
