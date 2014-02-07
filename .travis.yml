@@ -6,7 +6,7 @@ php:
 
 before_install:
   - tests/before_install.sh
-  - cp tests/core_install ../core/
+  - cp tests/core_install.sh ../core/
   - cd ../core; tests/core_install.sh sqlite
 
 script:
