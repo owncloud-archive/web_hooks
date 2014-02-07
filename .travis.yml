@@ -11,5 +11,4 @@ before_install:
 
 script:
   - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
-  - cd ../core/apps/web_hooks/tests; php coverage-checker.php clover.xml 75
-  - cp ../core/apps/web_hooks/tests/clover.xml tests
+ 
