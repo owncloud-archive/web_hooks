@@ -7,7 +7,7 @@ php:
 before_install:
   - tests/before_install.sh
   - cp tests/core_install.sh ../core/
-  - cd ../core; tests/core_install.sh sqlite
+  - cd ../core; ./core_install.sh sqlite
 
 script:
   - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
