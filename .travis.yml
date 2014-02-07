@@ -4,10 +4,15 @@ php:
   - 5.4
   - 5.5
 
+env:
+  - DB=sqlite
+  - DB=mysql
+#  - DB=postgres
+
 before_install:
   - tests/before_install.sh
   - cp tests/core_install.sh ../core/
-  - cd ../core; ./core_install.sh sqlite
+  - cd ../core; ./core_install.sh $DB
 
 script:
   - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml

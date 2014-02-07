@@ -3,16 +3,16 @@
 # ownCloud
 #
 # @author Thomas Müller
-# @copyright 2012, 2013 Thomas Müller thomas.mueller@tmit.eu
+# @copyright 2014Thomas Müller thomas.mueller@tmit.eu
 #
 
-DATABASENAME=oc_autotest
-DATABASEUSER=oc_autotest
+DATABASENAME=travis
+DATABASEUSER=
 ADMINLOGIN=admin
 BASEDIR=$PWD
 
 #DBCONFIGS="sqlite mysql pgsql oci"
-DBCONFIGS="sqlite"
+DBCONFIGS="sqlite mysql pgsql"
 PHPUNIT=$(which phpunit)
 
 if [ $1 ]; then
@@ -175,28 +175,3 @@ fi
 
 cd $BASEDIR
 
-#
-# NOTES on mysql:
-#  - CREATE DATABASE oc_autotest;
-#  - CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY 'owncloud';
-#  - grant all on oc_autotest.* to 'oc_autotest'@'localhost';
-#
-#  - for parallel executor support with EXECUTOR_NUMBER=0:
-#  - CREATE DATABASE oc_autotest0;
-#  - CREATE USER 'oc_autotest0'@'localhost' IDENTIFIED BY 'owncloud';
-#  - grant all on oc_autotest0.* to 'oc_autotest0'@'localhost';
-#
-# NOTES on pgsql:
-#  - su - postgres
-#  - createuser -P oc_autotest (enter password and enable superuser)
-#  - to enable dropdb I decided to add following line to pg_hba.conf (this is not the safest way but I don't care for the testing machine):
-# local	all	all	trust
-#
-#  - for parallel executor support with EXECUTOR_NUMBER=0:
-#  - createuser -P oc_autotest0 (enter password and enable superuser)
-#
-# NOTES on oci:
-#  - it's a pure nightmare to install Oracle on a Linux-System
-#  - DON'T TRY THIS AT HOME!
-#  - if you really need it: we feel sorry for you
-#
