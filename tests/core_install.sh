@@ -153,10 +153,7 @@ EOF
 	echo "END INDEX"
 
 	#test execution
-	echo "Testing with $1 ..."
 	cd tests
-	rm -rf coverage-html-$1
-	mkdir coverage-html-$1
 	php -f enable_all.php | grep -i -C9999 error && echo "Error during setup" && exit 101
 }
 
