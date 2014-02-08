@@ -11,6 +11,9 @@ env:
 
 before_install:
   - mysql -e 'create database oc_autotest;'
+  - mysql -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY 'owncloud'";
+  - mysql -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost'";
+
   - tests/before_install.sh
   - cp tests/core_install.sh ../core/
 
