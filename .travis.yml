@@ -1,19 +1,21 @@
 language: php
 php:
   - 5.3
-  - 5.4
-  - 5.5
+#  - 5.4
+#  - 5.5
 
 env:
-  - DB=sqlite
+#  - DB=sqlite
   - DB=mysql
 #  - DB=postgres
 
 before_install:
   - mysql -e 'create database oc_autotest;'
-  - echo "USE mysql;\nSELECT * from user;\n" | mysql -u root
   - tests/before_install.sh
   - cp tests/core_install.sh ../core/
+
+install:
+  - sudo apt-get install -y --force-yes php5-mysql
   - cd ../core; ./core_install.sh $DB
 
 script:
