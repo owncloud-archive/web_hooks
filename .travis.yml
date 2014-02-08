@@ -4,10 +4,21 @@ php:
   - 5.4
   - 5.5
 
+env:
+  - DB=sqlite
+  - DB=mysql
+#  - DB=postgres
+
 before_install:
+  - mysql -e 'create database oc_autotest;'
+  - mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY 'owncloud'";
+  - mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost'";
+
   - tests/before_install.sh
   - cp tests/core_install.sh ../core/
-  - cd ../core; ./core_install.sh sqlite
+
+install:
+  - cd ../core; ./core_install.sh $DB
 
 script:
   - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
