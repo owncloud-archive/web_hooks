@@ -61,7 +61,7 @@ cat > ./tests/autoconfig-mysql.php <<DELIM
   'dbuser' => '$DATABASEUSER',
   'dbname' => '$DATABASENAME',
   'dbhost' => '127.0.0.1',
-  'dbpass' => 'DATABASEPASSWORD',
+  'dbpass' => '',
 );
 DELIM
 

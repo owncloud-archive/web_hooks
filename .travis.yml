@@ -15,7 +15,6 @@ before_install:
   - cp tests/core_install.sh ../core/
 
 install:
-  - sudo apt-get install -y --force-yes php5-mysql
   - cd ../core; ./core_install.sh $DB
 
 script:
