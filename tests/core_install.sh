@@ -7,8 +7,8 @@
 #
 
 DATABASENAME=oc_autotest
-DATABASEUSER=travis
-#DATABASEPASSWORD=
+DATABASEUSER=root
+DATABASEPASSWORD=password
 ADMINLOGIN=admin
 BASEDIR=$PWD
 
@@ -61,7 +61,7 @@ cat > ./tests/autoconfig-mysql.php <<DELIM
   'dbuser' => '$DATABASEUSER',
   'dbname' => '$DATABASENAME',
   'dbhost' => '127.0.0.1',
-  'dbpass' => '',
+  'dbpass' => 'DATABASEPASSWORD',
 );
 DELIM
 
