@@ -10,6 +10,7 @@ env:
 #  - DB=postgres
 
 before_install:
+  - mysql -e 'create database oc_autotest;'
   - tests/before_install.sh
   - cp tests/core_install.sh ../core/
   - cd ../core; ./core_install.sh $DB
