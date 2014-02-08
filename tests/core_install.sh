@@ -6,7 +6,7 @@
 # @copyright 2014Thomas Müller thomas.mueller@tmit.eu
 #
 
-DATABASENAME=travis
+DATABASENAME=oc_autotest
 DATABASEUSER=travis
 #DATABASEPASSWORD=
 ADMINLOGIN=admin
@@ -61,7 +61,7 @@ cat > ./tests/autoconfig-mysql.php <<DELIM
   'dbuser' => '$DATABASEUSER',
   'dbname' => '$DATABASENAME',
   'dbhost' => 'localhost',
-  'dbpass' => '',
+  'dbpass' => '127.0.0.1',
 );
 DELIM
 
