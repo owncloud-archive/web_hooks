@@ -116,11 +116,17 @@ class HubController {
 		$this->respond(204, null);
 	}
 
+	/**
+	 * @param string $key
+	 */
 	protected function getPostParameter($key, $default = null) {
 		$key = str_replace('.', '_', $key);
 		return isset($this->post[$key]) ? $this->post[$key] : $default;
 	}
 
+	/**
+	 * @param integer $statusCode
+	 */
 	private function respondError($statusCode, $message) {
 		$data = array(
 			'message' => $message,
