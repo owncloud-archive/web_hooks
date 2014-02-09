@@ -7,7 +7,7 @@ php:
 env:
 #  - DB=sqlite
 #  - DB=mysql
-  - DB=postgres
+  - DB=pgsql
 
 before_install:
   - mysql -e 'create database oc_autotest;'
