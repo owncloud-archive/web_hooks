@@ -1,14 +1,10 @@
 #Web Hooks - ownCloud goes PubSubHubbub
 
-Build status
-------------
-
-| branch      | status |
-| ----------- | ------ |
-| master      | [![Build Status](https://travis-ci.org/owncloud/web_hooks.png?branch=master)](https://travis-ci.org/owncloud/web_hooks) |
+Build status: [![Build Status](https://travis-ci.org/owncloud/web_hooks.png?branch=master)](https://travis-ci.org/owncloud/web_hooks) |
 
 Quality: [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/owncloud/web_hooks/badges/quality-score.png?s=9dfd4fe5f4b771561de13ac9d16bf24d4204cc52)](https://scrutinizer-ci.com/g/owncloud/web_hooks/)
 
+Coverage: [![Code Coverage](https://scrutinizer-ci.com/g/owncloud/web_hooks/badges/coverage.png?s=a41d6a9cf571950d6146bff9825d1e6d59f17e75)](https://scrutinizer-ci.com/g/owncloud/web_hooks/)
 
 How to test the web hooks
 -------------------------
