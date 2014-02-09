@@ -71,7 +71,7 @@ class Notifications extends PHPUnit_Framework_TestCase {
 		$notification = $notifications[0];
 		$storage1->deleteById($notification['id']);
 
-		$notifications = $this->assertNotifications(3);
+		$this->assertNotifications(3);
 	}
 
 		/**
