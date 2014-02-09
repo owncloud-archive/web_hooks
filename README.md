@@ -1,4 +1,4 @@
-#Web Hooks - ownCloud goes puhsubbubhub
+#Web Hooks - ownCloud goes PubSubHubbub
 
 Build status
 ------------
