@@ -43,7 +43,7 @@ class Subscriptions extends PHPUnit_Framework_TestCase {
 		$this->assertArrayHasKey('callback', $one);
 	}
 
-	function testRemoveSubscriber() {
+	function testDelete() {
 		$topic = uniqid('topic-');
 		$callback1 = uniqid('callback-');
 		$callback2 = uniqid('callback-');
@@ -58,6 +58,24 @@ class Subscriptions extends PHPUnit_Framework_TestCase {
 		$this->assertSubscriptions($topic, 1);
 
 		$storage->delete($callback2, $topic);
+		$this->assertSubscriptions($topic, 0);
+	}
+
+	function testDeleteById() {
+		$topic = uniqid('topic-');
+		$callback1 = uniqid('callback-');
+		$callback2 = uniqid('callback-');
+
+		$storage = new \OCA\Web_Hooks\Subscriptions();
+		$id0 = $storage->add($callback1, $topic);
+		$id1 = $storage->add($callback2, $topic);
+		$this->assertSubscriptions($topic, 2);
+
+		// use second instance to make sure the database is used
+		$storage->deleteById($id0);
+		$this->assertSubscriptions($topic, 1);
+
+		$storage->deleteById($id1);
 		$this->assertSubscriptions($topic, 0);
 	}
 
