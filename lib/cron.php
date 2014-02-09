@@ -51,6 +51,8 @@ class Cron {
 
 	/**
 	 * @param Notifications $notifications
+	 * @param Subscriptions $subscriptions
+	 * @param \Closure $pushFunction
 	 */
 	public function __construct($notifications, $subscriptions, $pushFunction = null) {
 		$this->notifications = $notifications;

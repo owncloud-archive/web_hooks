@@ -76,7 +76,7 @@ class Notifications extends PHPUnit_Framework_TestCase {
 
 		/**
 	 * @param $topic
-	 * @param $count
+	 * @param integer $count
 	 */
 	private function assertNotifications($count) {
 		// use second instance to make sure the database is used

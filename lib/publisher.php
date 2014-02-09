@@ -75,6 +75,7 @@ class Publisher {
 	 *
 	 * @param $notifications
 	 * @param $payload
+	 * @param string $topic
 	 */
 	private function addNotifications($topic, $payload) {
 		if (!is_null($this->addNotificationsFunction)) {
@@ -136,6 +137,9 @@ class Publisher {
 		return $payload;
 	}
 
+	/**
+	 * @param string $path
+	 */
 	private function addFileInfo($payload, $path) {
 		$view = \OC\Files\Filesystem::getView();
 		if (!is_null($view)) {

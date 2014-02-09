@@ -62,7 +62,8 @@ class Subscriptions extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @param $topic
+	 * @param string $topic
+	 * @param integer $count
 	 */
 	private function assertSubscriptions($topic, $count) {
 		// use second instance to make sure the database is used
