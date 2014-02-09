@@ -7,13 +7,13 @@ php:
 env:
   - DB=sqlite
   - DB=mysql
-#  - DB=postgres
+  - DB=postgres
 
 before_install:
   - mysql -e 'create database oc_autotest;'
   - mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY 'owncloud'";
   - mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost'";
-
+  - createuser -U oc_autotest -s owncloud
   - tests/before_install.sh
   - cp tests/core_install.sh ../core/
 
