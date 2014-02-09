@@ -22,4 +22,8 @@ install:
 
 script:
   - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
+  - cp ../core/apps/web_hooks/tests/clover.xml .
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
  
