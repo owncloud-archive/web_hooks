@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 # Script performs non-interactive instllation of Oracle XE 10g on Debian
 #
 # Based on oracle10g-update.sh from HTSQL project:
@@ -84,6 +84,9 @@ sudo dpkg -i --force-architecture /tmp/oracle_repack/oracle-xe-universal_fixed_1
 # Fix the problem when the configuration script eats the last
 # character of the password if it is 'n': replace IFS="\n" with IFS=$'\n'.
 sudo sed -i -e s/IFS=\"\\\\n\"/IFS=\$\'\\\\n\'/ /etc/init.d/oracle-xe
+
+# change shebang of nls_lang.sh
+sed -i 's/#!\/bin\/sh/#!\/bin\/bash/' /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/nls_lang.sh
 
 # Configure the server; provide the answers for the following questions:
 # The HTTP port for Oracle Application Express: 8080
