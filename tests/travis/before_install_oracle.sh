@@ -116,4 +116,12 @@ END
 
 free_restore
 
-# build 
+# build php module
+sudo pecl install oci8
+
+sudo cat <<END > /etc/php.d/oci8.ini
+; Enable OCI8 extension module
+extension=oci8.so
+END
+
+
