@@ -6,6 +6,13 @@
 # @copyright 2014Thomas Müller thomas.mueller@tmit.eu
 #
 
+#DEBUG
+export
+
+# Load Oracle environment variables so that we could run `sqlplus`.
+. /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/oracle_env.sh
+
+#
 DATABASENAME=oc_autotest
 DATABASEUSER=oc_autotest
 ADMINLOGIN=admin
