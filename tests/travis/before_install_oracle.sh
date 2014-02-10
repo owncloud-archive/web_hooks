@@ -117,6 +117,8 @@ END
 free_restore
 
 # build php module
+sudo apt-get install -qq --force-yes build-essential
+sudo apt-get install -qq --force-yes php5-dev php-pear libaio1
 sudo pecl install oci8
 
 sudo cat <<END > /etc/php.d/oci8.ini
