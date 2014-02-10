@@ -126,4 +126,7 @@ sudo cat <<END > /etc/php.d/oci8.ini
 extension=oci8.so
 END
 
+# add travis user to oracle user group - necessary for execution of sqlplus
+sudo adduser travis dba
+
 
