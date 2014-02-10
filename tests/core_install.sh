@@ -11,8 +11,7 @@ DATABASEUSER=oc_autotest
 ADMINLOGIN=admin
 BASEDIR=$PWD
 
-#DBCONFIGS="sqlite mysql pgsql oci"
-DBCONFIGS="sqlite mysql pgsql"
+DBCONFIGS="sqlite mysql pgsql oracle"
 PHPUNIT=$(which phpunit)
 
 if [ $1 ]; then
@@ -80,7 +79,7 @@ cat > ./tests/autoconfig-pgsql.php <<DELIM
 );
 DELIM
 
-cat > ./tests/autoconfig-oci.php <<DELIM
+cat > ./tests/autoconfig-oracle.php <<DELIM
 <?php
 \$AUTOCONFIG = array (
   'installed' => false,
@@ -119,7 +118,7 @@ function execute_tests {
 	if [ "$1" == "pgsql" ] ; then
 		dropdb -U $DATABASEUSER $DATABASENAME
 	fi
-	if [ "$1" == "oci" ] ; then
+	if [ "$1" == "oracle" ] ; then
 		echo "drop the database"
 		sqlplus -s -l / as sysdba <<EOF
 			drop user $DATABASENAME cascade;
