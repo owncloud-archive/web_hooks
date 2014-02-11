@@ -8,13 +8,15 @@
 		>
 	<testsuite name='ownCloud-WebHooks'>
 		<directory suffix='.php'>.</directory>
-		<!--<file>apps.php</file>-->
 	</testsuite>
 	<!-- filters for code coverage -->
 	<filter>
-		<!-- whitelist processUncoveredFilesFromWhitelist="true" -->
+		<blacklist>
+			<directory suffix=".php">../../..</directory>
+			<directory suffix=".php">../../web_hooks/tests</directory>
+		</blacklist>
 		<whitelist>
-			<directory suffix=".php">../..</directory>
+			<directory suffix=".php">../../web_hooks</directory>
 		</whitelist>
 	</filter>
 	<logging>
