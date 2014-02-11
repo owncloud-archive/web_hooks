@@ -134,6 +134,9 @@ class HubController {
 		$this->respond($statusCode, $data);
 	}
 
+	/**
+	 * @param integer $statusCode
+	 */
 	private function respond($statusCode, $data) {
 		header('X-Content-Type-Options: nosniff');
 		header('Content-Type: application/json');

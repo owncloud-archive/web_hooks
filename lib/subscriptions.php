@@ -39,6 +39,9 @@ class Subscriptions {
 		\OC_DB::executeAudited($sql, array($callback, $topic));
 	}
 
+	/**
+	 * @param string $topic
+	 */
 	public function allByTopic($topic) {
 		$sql = 'SELECT * FROM `*PREFIX*hub_subscriptions` WHERE `topic` = ?';
 		$result = \OC_DB::executeAudited($sql, array($topic));
