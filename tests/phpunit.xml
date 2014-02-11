@@ -13,6 +13,7 @@
 	<filter>
 		<blacklist>
 			<directory suffix=".php">../../..</directory>
+			<directory suffix=".php">../../web_hooks/tests</directory>
 		</blacklist>
 		<whitelist>
 			<directory suffix=".php">../../web_hooks</directory>
