@@ -117,14 +117,17 @@ END
 free_restore
 
 # build php module
-sudo apt-get install -qq --force-yes build-essential
-sudo apt-get install -qq --force-yes php5-dev php-pear libaio1
-sudo bash -c 'printf "/usr/lib/oracle/xe/app/oracle/product/10.2.0/server\n" | pecl install oci8'
+git clone https://github.com/DeepDiver1975/oracle_instant_client_for_ubuntu_64bit.git instantclient
+cd instantclient
+sudo bash -c 'printf "\n" | python system_setup.py'
 
-sudo cat <<END > /etc/php.d/oci8.ini
-; Enable OCI8 extension module
-extension=oci8.so
-END
+sudo mkdir -p /usr/lib/oracle/11.2/client64/rdbms/
+sudo ln -s /usr/include/oracle/11.2/client64/ /usr/lib/oracle/11.2/client64/rdbms/public
+
+sudo apt-get install -qq --force-yes build-essential php5-dev php-pear libaio1
+sudo bash -c 'printf "/usr/lib/oracle/11.2/client64\n" | pecl install oci8'
+
+sudo bash -c 'echo extension=oci8.so >> /etc/php5/cli/php.ini'
 
 # add travis user to oracle user group - necessary for execution of sqlplus
 sudo adduser travis dba
