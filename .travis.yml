@@ -20,7 +20,8 @@ install:
   - sudo apt-get install strace
 
 script:
-  - cd ../core/apps/web_hooks/tests; strace phpunit --configuration phpunit.xml --debug
+  - php -i
+  - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml --debug
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 

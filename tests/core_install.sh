@@ -158,11 +158,6 @@ EOF
 	# copy autoconfig
 	cp $BASEDIR/tests/autoconfig-$1.php $BASEDIR/config/autoconfig.php
 
-	# make php display all errors ...
-	sudo bash -c 'echo display_errors=On >> /etc/php5/cli/php.ini'
-	sudo bash -c 'echo display_startup_errors=On >> /etc/php5/cli/php.ini'
-	sudo bash -c 'echo error_log=/var/log/php-error.log >> /etc/php5/cli/php.ini'
-
 	# trigger installation
 	echo "INDEX"
 	#php -f index.php | grep -i -C9999 error && echo "Error during setup" && exit 101

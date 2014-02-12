@@ -125,9 +125,10 @@ sudo mkdir -p /usr/lib/oracle/11.2/client64/rdbms/
 sudo ln -s /usr/include/oracle/11.2/client64/ /usr/lib/oracle/11.2/client64/rdbms/public
 
 sudo apt-get install -qq --force-yes build-essential php5-dev php-pear libaio1
+PHP_INI_FILE="`php --ini | grep -i Loaded | sed "s/[^/]*//"`"
+echo "Identified '$PHP_INI_FILE' as php.ini loaded for php-cli. Using as pecl php_ini."
+sudo bash -c "pecl config-set php_ini $PHP_INI_FILE"
 sudo bash -c 'printf "/usr/lib/oracle/11.2/client64\n" | pecl install oci8'
-
-sudo bash -c 'echo extension=oci8.so >> /etc/php5/cli/php.ini'
 
 # add travis user to oracle user group - necessary for execution of sqlplus
 sudo adduser travis dba
