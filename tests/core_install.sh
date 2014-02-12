@@ -5,11 +5,6 @@
 # @author Thomas Müller
 # @copyright 2014Thomas Müller thomas.mueller@tmit.eu
 #
-
-#DEBUG
-export
-
-#
 DATABASENAME=oc_autotest
 DATABASEUSER=oc_autotest
 ADMINLOGIN=admin

@@ -1,14 +1,14 @@
 language: php
 php:
 #  - 5.3
-#  - 5.4
+  - 5.4
   - 5.5
 
 env:
   - DB=sqlite
 #  - DB=mysql
 #  - DB=pgsql
-  - DB=oracle ORACLE_HOME="/usr/lib/oracle/xe/app/oracle/product/10.2.0/server"
+  - DB=oracle
 
 before_install:
   - tests/travis/before_install_$DB.sh
@@ -17,11 +17,9 @@ before_install:
 
 install:
   - cd ../core; ./core_install.sh $DB
-  - sudo apt-get install strace
 
 script:
-  - php -i
-  - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml --debug
+  - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 
