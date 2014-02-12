@@ -180,8 +180,11 @@ else
 	execute_tests $1 $2 $3
 fi
 
-# show log files
-echo "owncloud.log"
+# show environment
+echo "data directory:"
+ls -ll $DATADIR
+
+echo "owncloud.log:"
 cat $DATADIR/owncloud.log
 
 cd $BASEDIR
