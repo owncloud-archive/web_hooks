@@ -22,7 +22,6 @@
 
 namespace OCA\Web_Hooks;
 use OC_L10N_String;
-use OCA\Web_Hooks\Subscriptions;
 
 /**
  * Class HubController
@@ -66,30 +65,60 @@ class HubController {
 
 	/**
 	 * 5.1.  Subscriber Sends Subscription Request
-
-	Subscription is initiated by the subscriber making an HTTPS [RFC2616] or HTTP [RFC2616] POST request to the hub URL. This request has a Content-Type of application/x-www-form-urlencoded (described in Section 17.13.4 of [W3C.REC‑html401‑19991224]) and the following parameters in its body:
-
-	hub.callback
-	REQUIRED. The subscriber's callback URL where notifications should be delivered. It is considered good practice to use a unique callback URL for each subscription.
-	hub.mode
-	REQUIRED. The literal string "subscribe" or "unsubscribe", depending on the goal of the request.
-	hub.topic
-	REQUIRED. The topic URL that the subscriber wishes to subscribe to or unsubscribe from.
-	hub.lease_seconds
-	OPTIONAL. Number of seconds for which the subscriber would like to have the subscription active. Hubs MAY choose to respect this value or not, depending on their own policies. This parameter MAY be present for unsubscription requests and MUST be ignored by the hub in that case.
-	hub.secret
-	OPTIONAL. A subscriber-provided secret string that will be used to compute an HMAC digest for authorized content distribution. If not supplied, the HMAC digest will not be present for content distribution requests. This parameter SHOULD only be specified when the request was made over HTTPS [RFC2818]. This parameter MUST be less than 200 bytes in length.
-
-	Subscribers MAY also include additional HTTP [RFC2616] request parameters, as well as HTTP [RFC2616] Headers if they are required by the hub. In the context of social web applications, it is considered good practice to include a From HTTP [RFC2616] header (as described in section 14.22 of Hypertext Transfer Protocol [RFC2616]) to indicate on behalf of which user the subscription is being performed.
-
-	Hubs MUST ignore additional request parameters they do not understand.
-
-	Hubs MUST allow subscribers to re-request subscriptions that are already activated. Each subsequent request to a hub to subscribe or unsubscribe MUST override the previous subscription state for a specific topic URL and callback URL combination once the action is verified. Any failures to confirm the subscription action MUST leave the subscription state unchanged. This is required so subscribers can renew their subscriptions before the lease seconds period is over without any interruption.
-
 	 *
-	 * @param $params
+	 * Subscription is initiated by the subscriber making an HTTPS [RFC2616] or HTTP [RFC2616] POST request to the hub
+	 * URL. This request has a Content-Type of application/x-www-form-urlencoded (described in Section 17.13.4 of
+	 * [W3C.REC‑html401‑19991224]) and the following parameters in its body:
+	 *
+	 * hub.callback
+	 * REQUIRED. The subscriber's callback URL where notifications should be delivered. It is considered good practice
+	 * to use a unique callback URL for each subscription.
+	 *
+	 * hub.mode
+	 * REQUIRED. The literal string "subscribe" or "unsubscribe", depending on the goal of the request.
+	 *
+	 * hub.topic
+	 * REQUIRED. The topic URL that the subscriber wishes to subscribe to or unsubscribe from.
+	 *
+	 * hub.lease_seconds
+	 * OPTIONAL. Number of seconds for which the subscriber would like to have the subscription active. Hubs MAY
+	 * choose to respect this value or not, depending on their own policies. This parameter MAY be present for
+	 * unsubscription requests and MUST be ignored by the hub in that case.
+	 *
+	 * hub.secret
+	 * OPTIONAL. A subscriber-provided secret string that will be used to compute an HMAC digest for authorized
+	 * content distribution. If not supplied, the HMAC digest will not be present for content distribution requests.
+	 * This parameter SHOULD only be specified when the request was made over HTTPS [RFC2818]. This parameter MUST
+	 * be less than 200 bytes in length.
+	 *
+	 * Subscribers MAY also include additional HTTP [RFC2616] request parameters, as well as HTTP [RFC2616]
+	 * Headers if they are required by the hub. In the context of social web applications, it is considered good
+	 * practice to include a From HTTP [RFC2616] header (as described in section 14.22 of Hypertext Transfer
+	 * Protocol [RFC2616]) to indicate on behalf of which user the subscription is being performed.
+	 *
+	 * Hubs MUST ignore additional request parameters they do not understand.
+	 *
+	 * Hubs MUST allow subscribers to re-request subscriptions that are already activated. Each subsequent request
+	 * to a hub to subscribe or unsubscribe MUST override the previous subscription state for a specific topic URL
+	 * and callback URL combination once the action is verified. Any failures to confirm the subscription action
+	 * MUST leave the subscription state unchanged. This is required so subscribers can renew their subscriptions
+	 * before the lease seconds period is over without any interruption.
+	 *
 	 */
-	public function subscribe($params) {
+	public function subscribe() {
+
+		// check access
+		if (!\OCP\User::isLoggedIn()) {
+			$this->respondError(401, "Bad credentials");
+			return;
+		}
+
+		// only admins are allowed to subscribe
+		if( !\OC_User::isAdminUser(\OCP\User::getUser())) {
+			$this->respondError(403, "Not allowed");
+			return;
+		}
+
 		$callback = $this->getPostParameter('hub.callback', null);
 		$mode = $this->getPostParameter('hub.mode', null);
 		$topic = $this->getPostParameter('hub.topic', null);
@@ -104,9 +133,13 @@ class HubController {
 			return;
 		}
 
-		//
-		// TODO: validate topic
-		//
+		// validate topic
+		$globalTopics = array(Publisher::TOPIC_QUOTA, Publisher::TOPIC_FS_CHANGE);
+		if(in_array($topic, $globalTopics)) {
+			$this->respondError(400, "Invalid hub.topic: \"$topic\"");
+			return;
+		}
+
 		if ($mode === 'subscribe') {
 			if (!$this->subscriptions->alreadySubscribed($callback, $topic)) {
 				$this->subscriptions->add($callback, $topic);
@@ -120,6 +153,8 @@ class HubController {
 
 	/**
 	 * @param string $key
+	 * @param mixed $default
+	 * @return mixed
 	 */
 	protected function getPostParameter($key, $default = null) {
 		$key = str_replace('.', '_', $key);
@@ -128,6 +163,7 @@ class HubController {
 
 	/**
 	 * @param integer $statusCode
+	 * @param string $message
 	 */
 	private function respondError($statusCode, $message) {
 		$data = array(
@@ -138,6 +174,7 @@ class HubController {
 
 	/**
 	 * @param integer $statusCode
+	 * @param $data
 	 */
 	private function respond($statusCode, $data) {
 		header('X-Content-Type-Options: nosniff');
@@ -149,7 +186,9 @@ class HubController {
 		$this->renderBody($data);
 	}
 
-
+	/**
+	 * @param mixed $data
+	 */
 	private function renderBody($data) {
 		if (is_null($data)) {
 			return;
