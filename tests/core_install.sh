@@ -9,9 +9,6 @@
 #DEBUG
 export
 
-# Load Oracle environment variables so that we could run `sqlplus`.
-. /usr/lib/oracle/xe/app/oracle/product/10.2.0/server/bin/oracle_env.sh
-
 #
 DATABASENAME=oc_autotest
 DATABASEUSER=oc_autotest
@@ -20,6 +17,10 @@ BASEDIR=$PWD
 
 DBCONFIGS="sqlite mysql pgsql oracle"
 PHPUNIT=$(which phpunit)
+
+# set oracle home if it is not set
+TRAVIS_ORACLE_HOME="/usr/lib/oracle/xe/app/oracle/product/10.2.0/server"
+[ -z "$ORACLE_HOME" ] && ORACLE_HOME=$TRAVIS_ORACLE_HOME
 
 if [ $1 ]; then
 	FOUND=0
@@ -126,6 +127,9 @@ function execute_tests {
 		dropdb -U $DATABASEUSER $DATABASENAME
 	fi
 	if [ "$1" == "oracle" ] ; then
+		echo "Load Oracle environment variables so that we can run 'sqlplus'."
+		. $ORACLE_HOME/bin/oracle_env.sh
+
 		echo "drop the database"
 		sqlplus -s -l / as sysdba <<EOF
 			drop user $DATABASENAME cascade;
