@@ -20,6 +20,7 @@ install:
 
 script:
   - cd ../core/apps/web_hooks/tests; ORACLE_HOME="/usr/lib/oracle/xe/app/oracle/product/10.2.0/server" phpunit --configuration phpunit.xml --debug
+  - cat /var/log/php-error.log
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 
