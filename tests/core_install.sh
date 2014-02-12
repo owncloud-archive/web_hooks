@@ -159,12 +159,14 @@ EOF
 
 	# trigger installation
 	echo "INDEX"
-	php -f index.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	#php -f index.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	php -f index.php
 	echo "END INDEX"
 
 	#test execution
 	cd tests
-	php -f enable_all.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	#php -f enable_all.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	php -f enable_all.php
 }
 
 #
