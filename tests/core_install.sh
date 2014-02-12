@@ -160,7 +160,8 @@ EOF
 
 	# make php display all errors ...
 	sudo bash -c 'echo display_errors=On >> /etc/php5/cli/php.ini'
-	sudo bash -c 'echo isplay_startup_errors=On >> /etc/php5/cli/php.ini'
+	sudo bash -c 'echo display_startup_errors=On >> /etc/php5/cli/php.ini'
+	sudo bash -c 'echo error_log=/var/log/php-error.log >> /etc/php5/cli/php.ini'
 
 	# trigger installation
 	echo "INDEX"
