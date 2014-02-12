@@ -124,9 +124,8 @@ sudo bash -c 'printf "\n" | python system_setup.py'
 sudo mkdir -p /usr/lib/oracle/11.2/client64/rdbms/
 sudo ln -s /usr/include/oracle/11.2/client64/ /usr/lib/oracle/11.2/client64/rdbms/public
 
-#sudo apt-get install -qq --force-yes build-essential php5-dev php-pear libaio1
 sudo apt-get install -qq --force-yes libaio1
-sudo bash -c 'printf "/usr/lib/oracle/11.2/client64\n" | pecl install oci8'
+printf "/usr/lib/oracle/11.2/client64\n" | pecl install oci8
 
 #echo "extension = <extension>.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
