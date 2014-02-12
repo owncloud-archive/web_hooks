@@ -28,6 +28,9 @@ class Publisher {
 	const TOPIC_QUOTA = 'owncloud://quota';
 	const TOPIC_FS_CHANGE = 'owncloud://filesystem-change';
 
+	const USER_TOPIC_QUOTA = 'owncloud://quota/:user';
+	const USER_TOPIC_FS_CHANGE = 'owncloud://filesystem-change/:user';
+
 	public $addNotificationsFunction = null;
 
 	private $barriers;
@@ -69,6 +72,11 @@ class Publisher {
 		$payload = $this->addFileInfo($payload, $path, $info);
 
 		$this->addNotifications(self::TOPIC_FS_CHANGE, $payload);
+		$user = \OCP\User::getUser();
+		if ($user !== false) {
+			$userQuota = str_replace(':user', $user, self::USER_TOPIC_FS_CHANGE);
+			$this->addNotifications($userQuota, $payload);
+		}
 	}
 
 	/**
@@ -113,6 +121,11 @@ class Publisher {
 		$payload = $this->addUser($payload);
 
 		$this->addNotifications(self::TOPIC_QUOTA, $payload);
+		$user = \OCP\User::getUser();
+		if ($user !== false) {
+			$userQuota = str_replace(':user', $user, self::USER_TOPIC_QUOTA);
+			$this->addNotifications($userQuota, $payload);
+		}
 	}
 
 	/**
