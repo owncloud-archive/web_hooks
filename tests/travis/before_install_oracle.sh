@@ -124,16 +124,13 @@ sudo bash -c 'printf "\n" | python system_setup.py'
 sudo mkdir -p /usr/lib/oracle/11.2/client64/rdbms/
 sudo ln -s /usr/include/oracle/11.2/client64/ /usr/lib/oracle/11.2/client64/rdbms/public
 
-sudo apt-get install -qq --force-yes build-essential php5-dev php-pear libaio1
+#sudo apt-get install -qq --force-yes build-essential php5-dev php-pear libaio1
+sudo apt-get install -qq --force-yes libaio1
 sudo bash -c 'printf "/usr/lib/oracle/11.2/client64\n" | pecl install oci8'
 
-PHP_ADDITIONAL_INI_DIR="`php --ini | grep additional | sed "s/[^/]*//"`"
+#echo "extension = <extension>.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
-echo "Identified '$PHP_ADDITIONAL_INI_DIR' as additional php extensions dir. Adding oci8.ini."
-sudo bash -c "echo extension=oci8.so >> $PHP_ADDITIONAL_INI_DIR/oci8.ini"
-
-# FIXME get paths dynamically
-sudo bash -c 'cp /usr/lib/php5/20090626/oci8.so /home/travis/.phpenv/versions/5.5.9/lib/php/extensions/no-debug-zts-20121212/oci8.so'
+cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 # add travis user to oracle user group - necessary for execution of sqlplus
 sudo adduser travis dba
