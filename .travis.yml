@@ -8,7 +8,7 @@ env:
   - DB=sqlite
 #  - DB=mysql
 #  - DB=pgsql
-  - DB=oracle
+  - DB=oracle ORACLE_HOME="/usr/lib/oracle/xe/app/oracle/product/10.2.0/server"
 
 before_install:
   - tests/travis/before_install_$DB.sh
@@ -17,10 +17,10 @@ before_install:
 
 install:
   - cd ../core; ./core_install.sh $DB
+  - sudo apt-get install strace
 
 script:
-  - cd ../core/apps/web_hooks/tests; ORACLE_HOME="/usr/lib/oracle/xe/app/oracle/product/10.2.0/server" phpunit --configuration phpunit.xml --debug
-  - cat /var/log/php-error.log
+  - cd ../core/apps/web_hooks/tests; strace phpunit --configuration phpunit.xml --debug
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 
