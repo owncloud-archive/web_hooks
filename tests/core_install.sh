@@ -189,6 +189,12 @@ else
 fi
 
 # show environment
+
+
+echo "owncloud configuration:"
+cat $BASEDIR/config/config.php
+
+
 echo "data directory:"
 ls -ll $DATADIR
 
