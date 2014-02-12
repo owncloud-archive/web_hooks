@@ -19,7 +19,7 @@ install:
   - cd ../core; ./core_install.sh $DB
 
 script:
-  - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml --debug
+  - cd ../core/apps/web_hooks/tests; ORACLE_HOME="/usr/lib/oracle/xe/app/oracle/product/10.2.0/server" phpunit --configuration phpunit.xml --debug
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
 

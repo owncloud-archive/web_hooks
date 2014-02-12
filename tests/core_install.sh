@@ -100,6 +100,7 @@ cat > ./tests/autoconfig-oracle.php <<DELIM
   'dbname' => 'XE',
   'dbhost' => 'localhost',
   'dbpass' => 'owncloud',
+  'loglevel' => 0,
 );
 DELIM
 
@@ -156,6 +157,10 @@ EOF
 
 	# copy autoconfig
 	cp $BASEDIR/tests/autoconfig-$1.php $BASEDIR/config/autoconfig.php
+
+	# make php display all errors ...
+	sudo bash -c 'echo display_errors=On >> /etc/php5/cli/php.ini'
+	sudo bash -c 'echo isplay_startup_errors=On >> /etc/php5/cli/php.ini'
 
 	# trigger installation
 	echo "INDEX"
