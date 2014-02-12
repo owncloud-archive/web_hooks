@@ -90,6 +90,12 @@ class HubController {
 	 * @param $params
 	 */
 	public function subscribe($params) {
+
+		if (!\OCP\User::isLoggedIn()) {
+			$this->respondError(401, "Bad credentials");
+			return;
+		}
+
 		$callback = $this->getPostParameter('hub.callback', null);
 		$mode = $this->getPostParameter('hub.mode', null);
 		$topic = $this->getPostParameter('hub.topic', null);
@@ -104,9 +110,18 @@ class HubController {
 			return;
 		}
 
-		//
-		// TODO: validate topic
-		//
+		// validate topic
+		$globalTopics = array(Publisher::TOPIC_QUOTA, Publisher::TOPIC_FS_CHANGE);
+		if(in_array($topic, $globalTopics)) {
+			$this->respondError(400, "Invalid hub.topic: \"$topic\"");
+			return;
+		}
+
+		if( !\OC_User::isAdminUser(\OCP\User::getUser())) {
+			$this->respondError(403, "Not allowed");
+			return;
+		}
+
 		if ($mode === 'subscribe') {
 			if (!$this->subscriptions->alreadySubscribed($callback, $topic)) {
 				$this->subscriptions->add($callback, $topic);
