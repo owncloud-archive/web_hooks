@@ -1,13 +1,13 @@
 language: php
 php:
-#  - 5.3
+  - 5.3
   - 5.4
   - 5.5
 
 env:
   - DB=sqlite
-#  - DB=mysql
-#  - DB=pgsql
+  - DB=mysql
+  - DB=pgsql
   - DB=oracle
 
 before_install:
