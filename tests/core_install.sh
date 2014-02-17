@@ -5,15 +5,17 @@
 # @author Thomas Müller
 # @copyright 2014Thomas Müller thomas.mueller@tmit.eu
 #
-
 DATABASENAME=oc_autotest
 DATABASEUSER=oc_autotest
 ADMINLOGIN=admin
 BASEDIR=$PWD
 
-#DBCONFIGS="sqlite mysql pgsql oci"
-DBCONFIGS="sqlite mysql pgsql"
+DBCONFIGS="sqlite mysql pgsql oracle"
 PHPUNIT=$(which phpunit)
+
+# set oracle home if it is not set
+TRAVIS_ORACLE_HOME="/usr/lib/oracle/xe/app/oracle/product/10.2.0/server"
+[ -z "$ORACLE_HOME" ] && ORACLE_HOME=$TRAVIS_ORACLE_HOME
 
 if [ $1 ]; then
 	FOUND=0
@@ -80,7 +82,7 @@ cat > ./tests/autoconfig-pgsql.php <<DELIM
 );
 DELIM
 
-cat > ./tests/autoconfig-oci.php <<DELIM
+cat > ./tests/autoconfig-oracle.php <<DELIM
 <?php
 \$AUTOCONFIG = array (
   'installed' => false,
@@ -93,6 +95,7 @@ cat > ./tests/autoconfig-oci.php <<DELIM
   'dbname' => 'XE',
   'dbhost' => 'localhost',
   'dbpass' => 'owncloud',
+  'loglevel' => 0,
 );
 DELIM
 
@@ -119,7 +122,10 @@ function execute_tests {
 	if [ "$1" == "pgsql" ] ; then
 		dropdb -U $DATABASEUSER $DATABASENAME
 	fi
-	if [ "$1" == "oci" ] ; then
+	if [ "$1" == "oracle" ] ; then
+		echo "Load Oracle environment variables so that we can run 'sqlplus'."
+		. $ORACLE_HOME/bin/oracle_env.sh
+
 		echo "drop the database"
 		sqlplus -s -l / as sysdba <<EOF
 			drop user $DATABASENAME cascade;
@@ -149,12 +155,14 @@ EOF
 
 	# trigger installation
 	echo "INDEX"
-	php -f index.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	#php -f index.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	php -f index.php
 	echo "END INDEX"
 
 	#test execution
 	cd tests
-	php -f enable_all.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	#php -f enable_all.php | grep -i -C9999 error && echo "Error during setup" && exit 101
+	php -f enable_all.php
 }
 
 #
@@ -169,6 +177,19 @@ if [ -z "$1" ]
 else
 	execute_tests $1 $2 $3
 fi
+
+# show environment
+
+
+echo "owncloud configuration:"
+cat $BASEDIR/config/config.php
+
+
+echo "data directory:"
+ls -ll $DATADIR
+
+echo "owncloud.log:"
+cat $DATADIR/owncloud.log
 
 cd $BASEDIR
 
