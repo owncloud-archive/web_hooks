@@ -41,6 +41,9 @@ class Subscriptions extends PHPUnit_Framework_TestCase {
 		$this->assertArrayHasKey('id', $one);
 		$this->assertArrayHasKey('topic', $one);
 		$this->assertArrayHasKey('callback', $one);
+
+		$already = $storage1->alreadySubscribed($callback, $topic);
+		$this->assertTrue($already);
 	}
 
 	function testDelete() {
@@ -92,4 +95,5 @@ class Subscriptions extends PHPUnit_Framework_TestCase {
 
 		return $subscribers;
 	}
+
 }

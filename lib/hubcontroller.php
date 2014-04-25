@@ -100,7 +100,7 @@ class HubController {
 		}
 
 		if (!$this->isCallbackValid($callback)) {
-			$this->respondError(400, "Invalid hub.callback: \"$mode\"");
+			$this->respondError(400, "Invalid hub.callback: \"$callback\"");
 			return;
 		}
 
@@ -108,7 +108,9 @@ class HubController {
 		// TODO: validate topic
 		//
 		if ($mode === 'subscribe') {
-			$this->subscriptions->add($callback, $topic);
+			if (!$this->subscriptions->alreadySubscribed($callback, $topic)) {
+				$this->subscriptions->add($callback, $topic);
+			}
 		} else {
 			$this->subscriptions->delete($callback, $topic);
 		}
