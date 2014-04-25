@@ -57,15 +57,16 @@ class Publisher {
 	 *
 	 * @param string $action file change action to be pushed
 	 * @param string $path of the file name which has been changed
+	 * @param array|null $info
 	 */
-	public function pushFileChange($action, $path) {
+	public function pushFileChange($action, $path, $info = null) {
 
 		$payload = array(
 			'action' => $action,
 			'path' => $path
 		);
 		$payload = $this->addUser($payload);
-		$payload = $this->addFileInfo($payload, $path);
+		$payload = $this->addFileInfo($payload, $path, $info);
 
 		$this->addNotifications(self::TOPIC_FS_CHANGE, $payload);
 	}
@@ -140,20 +141,23 @@ class Publisher {
 	/**
 	 * @param string $path
 	 */
-	private function addFileInfo($payload, $path) {
-		$view = \OC\Files\Filesystem::getView();
-		if (!is_null($view)) {
-			$info = $view->getFileInfo($path);
-			if (is_array($info)) {
-				if(isset($info['fileid'])) {
-					$payload['fileId'] = $info['fileid'];
-				}
-				if(isset($info['mimetype'])) {
-					$payload['mimeType'] = $info['mimetype'];
-				}
+	private function addFileInfo($payload, $path, $info) {
+		if (is_null($info)) {
+			$view = \OC\Files\Filesystem::getView();
+			if (!is_null($view)) {
+				$info = $view->getFileInfo($path);
 			}
-
 		}
+
+		if ($info) {
+			if(isset($info['fileid'])) {
+				$payload['fileId'] = $info['fileid'];
+			}
+			if(isset($info['mimetype'])) {
+				$payload['mimeType'] = $info['mimetype'];
+			}
+		}
+
 		return $payload;
 	}
 }

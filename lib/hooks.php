@@ -27,6 +27,7 @@ class Hooks {
 	const CLASSNAME = 'OCA\Web_Hooks\Hooks';
 
 	private static $preStorageInfo;
+	private static $deleteFileInfo = array();
 
 	public static function register() {
 		$signals = array(
@@ -66,13 +67,28 @@ class Hooks {
 	}
 
 	public static function deleteHook($arguments) {
+		// save delete file info
+		$view = \OC\Files\Filesystem::getView();
+		if (!is_null($view)) {
+			$path = $arguments['path'];
+			$info = $view->getFileInfo($path);
+			if ($info) {
+				self::$deleteFileInfo[$path] = $info;
+			}
+		}
+
 		// save storage information
 		self::$preStorageInfo = \OC_Helper::getStorageInfo('/');
 	}
 
 	public static function post_deleteHook($arguments) {
 		$h = new Publisher();
-		$h->pushFileChange('deleted', $arguments['path']);
+		$path = $arguments['path'];
+		$info = null;
+		if (isset(self::$deleteFileInfo[$path])) {
+			$info = self::$deleteFileInfo[$path];
+		}
+		$h->pushFileChange('deleted', $path, $info);
 
 		// quota change handling
 		$postStorageInfo = \OC_Helper::getStorageInfo('/');
