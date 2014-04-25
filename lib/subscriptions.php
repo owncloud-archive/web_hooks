@@ -60,4 +60,11 @@ class Subscriptions {
 		$sql = 'DELETE FROM `*PREFIX*hub_subscriptions` WHERE `id` = ?';
 		\OC_DB::executeAudited($sql, array($id));
 	}
+
+	public function alreadySubscribed($callback, $topic) {
+		$sql = 'SELECT count(*) FROM `*PREFIX*hub_subscriptions` WHERE `callback` = ? AND `topic` = ?';
+		$result = \OC_DB::executeAudited($sql, array($callback, $topic));
+
+		return $result->fetchOne() > 0;
+	}
 }
