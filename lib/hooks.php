@@ -28,6 +28,7 @@ class Hooks {
 
 	private static $preStorageInfo;
 	private static $deleteFileInfo = array();
+	private static $supportsPostUpdate = false;
 
 	public static function register() {
 		$signals = array(
@@ -38,6 +39,11 @@ class Hooks {
 			\OC\Files\Filesystem::signal_post_write,
 			\OC\Files\Filesystem::signal_write,
 		);
+
+		if (defined('\OC\Files\Filesystem::signal_post_update')) {
+			self::$supportsPostUpdate = true;
+			$signals[] = \OC\Files\Filesystem::signal_post_update;
+		}
 
 		foreach ($signals as $signal) {
 			\OCP\Util::connectHook(
@@ -52,9 +58,16 @@ class Hooks {
 		$h->pushFileChange('new', $arguments['path']);
 	}
 
-	public static function post_writeHook($arguments) {
+	public static function post_updateHook($arguments) {
 		$h = new Publisher();
 		$h->pushFileChange('changed', $arguments['path']);
+	}
+
+	public static function post_writeHook($arguments) {
+		$h = new Publisher();
+		if (!self::$supportsPostUpdate) {
+			$h->pushFileChange('changed', $arguments['path']);
+		}
 
 		// quota change handling
 		$postStorageInfo = \OC_Helper::getStorageInfo('/');
