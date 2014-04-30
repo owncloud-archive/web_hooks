@@ -107,12 +107,13 @@ class Cron {
 			'X-ownCloud-Event: ' . $topic,
 		));
 
-		curl_exec($request);
+		$response = curl_exec($request);
 		$code = curl_getinfo($request, CURLINFO_HTTP_CODE);
 		curl_close($request);
 		if ($code >= 200 && $code < 300) {
 			return true;
 		}
+		log("Push failed to $url: $code - $response");
 		return false;
 	}
 
