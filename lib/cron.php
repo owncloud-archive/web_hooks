@@ -90,7 +90,10 @@ class Cron {
 		$url = $notification['callback'];
 		$data = $notification['payload'];
 		$topic = $notification['topic'];
-		$data_string = json_encode($data);
+		$data_string = $data;
+		if (is_array($data)) {
+			$data_string = json_encode($data);
+		}
 
 		$request = curl_init($url);
 		curl_setopt($request, CURLOPT_CUSTOMREQUEST, "POST");
