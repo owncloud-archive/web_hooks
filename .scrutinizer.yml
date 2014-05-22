@@ -1,6 +1,7 @@
 tools:
     external_code_coverage: true
-
+    php_analyzer: true
+   
     php_analyzer:
         config:
             doc_comment_fixes:
