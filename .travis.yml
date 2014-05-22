@@ -5,22 +5,22 @@ php:
   - 5.5
 
 env:
+  global:
+    - CORE_BRANCH=master
+  matrix:
   - DB=sqlite
   - DB=mysql
   - DB=pgsql
   - DB=oracle
 
 before_install:
-  - tests/travis/before_install_$DB.sh
-  - tests/travis/before_install.sh
-  - cp tests/core_install.sh ../core/
-
-install:
-  - cd ../core; ./core_install.sh $DB
+  - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
+  - bash ./before_install.sh web_hooks $CORE_BRANCH $DB
 
 script:
+  # execute unit tests
   - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
+
+  # push code coverage to scrutinizer-ci
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
-
- 
