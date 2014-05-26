@@ -90,23 +90,43 @@ class HubController {
 	 * @param $params
 	 */
 	public function subscribe($params) {
+
+		// logged in user is required
+		if (!\OCP\User::isLoggedIn()) {
+			$this->respondError(401, "Bad credentials");
+			return;
+		}
+		$user = \OCP\User::getUser();
+
+		// get post parameters
 		$callback = $this->getPostParameter('hub.callback', null);
 		$mode = $this->getPostParameter('hub.mode', null);
 		$topic = $this->getPostParameter('hub.topic', null);
 
+		// validate mode
 		if (!in_array($mode, array('subscribe', 'unsubscribe'))) {
 			$this->respondError(400, "Invalid hub.mode: \"$mode\"");
 			return;
 		}
 
+		// validate callback
 		if (!$this->isCallbackValid($callback)) {
 			$this->respondError(400, "Invalid hub.callback: \"$callback\"");
 			return;
 		}
 
-		//
-		// TODO: validate topic
-		//
+		// validate topic
+		if (!$this->isTopicValid($user, $topic)) {
+			$this->respondError(400, "Invalid hub.topic: \"$topic\"");
+			return;
+		}
+
+		// validate access
+		if( !$this->userIsAllowedToAccessTopic($user, $topic)) {
+			$this->respondError(403, "Not allowed");
+			return;
+		}
+
 		if ($mode === 'subscribe') {
 			if (!$this->subscriptions->alreadySubscribed($callback, $topic)) {
 				$this->subscriptions->add($callback, $topic);
@@ -260,6 +280,45 @@ class HubController {
 		}
 
 		return false;
+	}
+
+	/**
+	 * @param $topic
+	 * @return boolean
+	 */
+	private function isTopicValid($user, $topic) {
+		if ($this->isGlobalTopic($topic)) {
+			return true;
+		}
+		return $this->isUserTopic($user, $topic);
+	}
+
+	/**
+	 * @return bool
+	 */
+	private function userIsAllowedToAccessTopic($user, $topic) {
+		if ($this->isGlobalTopic($topic)) {
+			return \OC_User::isAdminUser($user);
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $topic
+	 * @return bool
+	 */
+	private function isGlobalTopic($topic) {
+		$globalTopics = array(Publisher::TOPIC_QUOTA, Publisher::TOPIC_FS_CHANGE);
+		return in_array($topic, $globalTopics);
+	}
+
+	private function isUserTopic($user, $topic) {
+		$globalTopics = array(
+			str_replace(':user', $user, Publisher::USER_TOPIC_FS_CHANGE),
+			str_replace(':user', $user, Publisher::USER_TOPIC_QUOTA),
+		);
+		return in_array($topic, $globalTopics);
 	}
 
 }
