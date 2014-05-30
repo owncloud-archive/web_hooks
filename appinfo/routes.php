@@ -22,7 +22,7 @@ use OCA\Web_Hooks\HubController;
  *
  */
 
-/** @var $this OC_Router */
+/** @var $this \OC\Route\Router */
 $this->create('pubsubhubhub', '/hub')
 	->method('POST')
 	->action(function($params) {
