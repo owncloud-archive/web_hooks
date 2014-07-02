@@ -74,7 +74,7 @@ class Hooks {
 		$h->pushQuotaChange(self::$preStorageInfo, $postStorageInfo);
 	}
 
-	public static function writeHook($arguments) {
+	public static function writeHook() {
 		// save storage information
 		self::$preStorageInfo = \OC_Helper::getStorageInfo('/');
 	}
