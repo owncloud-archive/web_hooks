@@ -7,6 +7,7 @@
 	<require>5</require>
 	<description>Web-Hooks based on pubsubhubbub</description>
 	<types>
+        <filesystem/>
 	</types>
 	<shipped>true</shipped>
 </info>
