@@ -69,6 +69,19 @@ class Publisher {
 		$payload = $this->addFileInfo($payload, $path, $info);
 
 		$this->addNotifications(self::TOPIC_FS_CHANGE, $payload);
+
+		// handle shared files
+		list($owner, $physicalPath) = $this->resolveOwnerPath($path);
+		if (!is_null($owner)) {
+			$payload = array(
+				'action' => $action,
+				'path' => $path
+			);
+			$payload = $this->addUser($payload, $owner);
+			$payload = $this->addFileInfo($payload, $physicalPath, $info);
+
+			$this->addNotifications(self::TOPIC_FS_CHANGE, $payload);
+		}
 	}
 
 	/**
@@ -130,8 +143,10 @@ class Publisher {
 		return $index;
 	}
 
-	private function addUser($payload) {
-		$user = \OCP\User::getUser();
+	private function addUser($payload, $user = null) {
+		if (is_null($user)) {
+			$user = \OCP\User::getUser();
+		}
 		if ($user !== false) {
 			$payload['user'] = $user;
 		}
@@ -159,5 +174,24 @@ class Publisher {
 		}
 
 		return $payload;
+	}
+
+	private function resolveOwnerPath($path) {
+		$view = \OC\Files\Filesystem::getView();
+		if (!$view->isSharable($path)) {
+			return array(null, null);
+		}
+
+		$info = $view->getFileInfo($path);
+		if ($info) {
+			if(isset($info['fileid'])) {
+				$fileId = $info['fileid'];
+				$path = $view->getPath($fileId);
+				$owner = $view->getOwner($path);
+				return array($owner, $path);
+			}
+		}
+
+		return array(null, null);
 	}
 }
