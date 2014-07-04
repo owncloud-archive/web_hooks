@@ -135,7 +135,7 @@ class HubController {
 
 		// validate topic
 		$globalTopics = array(Publisher::TOPIC_QUOTA, Publisher::TOPIC_FS_CHANGE);
-		if(in_array($topic, $globalTopics)) {
+		if(!in_array($topic, $globalTopics)) {
 			$this->respondError(400, "Invalid hub.topic: \"$topic\"");
 			return;
 		}
