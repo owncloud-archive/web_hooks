@@ -9,9 +9,11 @@ env:
     - CORE_BRANCH=master
   matrix:
   - DB=sqlite
-  - DB=mysql
-  - DB=pgsql
-  - DB=oracle
+
+branches:
+  only:
+    - master
+    - stable7
 
 install:
   - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
@@ -24,3 +26,17 @@ script:
   # push code coverage to scrutinizer-ci
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
+matrix:
+  include:
+    - php: 5.4
+      env: DB=mysql
+    - php: 5.4
+      env: DB=pgsql
+    - php: 5.4
+      env: DB=oracle
+    - php: hhvm
+      env: DB=sqlite
+  allow_failures:
+    - php: hhvm
+  fast_finish: true
