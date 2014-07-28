@@ -22,6 +22,8 @@
 
 namespace OCA\Web_Hooks;
 
+use OC\Files\View;
+
 class Publisher {
 
 	// supported topics below
@@ -61,24 +63,29 @@ class Publisher {
 	 */
 	public function pushFileChange($action, $path, $info = null) {
 
+		if (is_null($info)) {
+			$view = \OC\Files\Filesystem::getView();
+			$info = $view->getFileInfo($path);
+		}
+
 		$payload = array(
 			'action' => $action,
 			'path' => $path
 		);
 		$payload = $this->addUser($payload);
-		$payload = $this->addFileInfo($payload, $path, $info);
+		$payload = $this->addFileInfo($payload, $info);
 
 		$this->addNotifications(self::TOPIC_FS_CHANGE, $payload);
 
 		// handle shared files
-		list($owner, $physicalPath) = $this->resolveOwnerPath($path);
+		list($owner, $physicalPath, $info) = $this->resolveOwnerPath($path, $info);
 		if (!is_null($owner)) {
 			$payload = array(
 				'action' => $action,
-				'path' => $path
+				'path' => $physicalPath
 			);
 			$payload = $this->addUser($payload, $owner);
-			$payload = $this->addFileInfo($payload, $physicalPath, $info);
+			$payload = $this->addFileInfo($payload, $info);
 
 			$this->addNotifications(self::TOPIC_FS_CHANGE, $payload);
 		}
@@ -156,42 +163,51 @@ class Publisher {
 	/**
 	 * @param string $path
 	 */
-	private function addFileInfo($payload, $path, $info) {
-		if (is_null($info)) {
-			$view = \OC\Files\Filesystem::getView();
-			if (!is_null($view)) {
-				$info = $view->getFileInfo($path);
-			}
-		}
+	private function addFileInfo($payload, $info) {
 
-		if ($info) {
-			if(isset($info['fileid'])) {
-				$payload['fileId'] = $info['fileid'];
-			}
-			if(isset($info['mimetype'])) {
-				$payload['mimeType'] = $info['mimetype'];
-			}
+		if(isset($info['fileid'])) {
+			$payload['fileId'] = $info['fileid'];
+		}
+		if(isset($info['mimetype'])) {
+			$payload['mimeType'] = $info['mimetype'];
 		}
 
 		return $payload;
 	}
 
-	private function resolveOwnerPath($path) {
+	private function resolveOwnerPath($path, $info) {
 		$view = \OC\Files\Filesystem::getView();
-		if (!$view->isSharable($path)) {
-			return array(null, null);
+		if (!$this->isShared($view, $path)) {
+			return array(null, null, null);
 		}
 
-		$info = $view->getFileInfo($path);
-		if ($info) {
-			if(isset($info['fileid'])) {
-				$fileId = $info['fileid'];
-				$path = $view->getPath($fileId);
-				$owner = $view->getOwner($path);
-				return array($owner, $path);
-			}
+		if(isset($info['fileid'])) {
+			$fileId = $info['fileid'];
+			$owner = $view->getOwner($path);
+			$ownerView = new View("/$owner/files");
+			$path = $ownerView->getPath($fileId);
+			return array($owner, $path, $info);
 		}
 
-		return array(null, null);
+		return array(null, null, null);
+	}
+
+	/**
+	 * @param View $view
+	 * @param string $path
+	 * @return bool
+	 */
+	private function isShared($view, $path) {
+		list($storage, ) = $view->resolvePath($path);
+		/**
+		 * @var \OC\Files\Storage\Storage $storage
+		 */
+		$sid = $storage->getId();
+		if (!is_null($sid)) {
+			$sid = explode(':', $sid);
+			return ($sid[0] === 'shared');
+		}
+
+		return false;
 	}
 }
