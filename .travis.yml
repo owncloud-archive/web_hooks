@@ -18,10 +18,13 @@ branches:
 install:
   - wget https://raw.githubusercontent.com/owncloud/administration/master/travis-ci/before_install.sh
   - bash ./before_install.sh web_hooks $CORE_BRANCH $DB
+  - cd ../core
+  - php occ app:enable web_hooks
 
 script:
   # execute unit tests
-  - cd ../core/apps/web_hooks/tests; phpunit --configuration phpunit.xml
+  - cd apps/web_hooks/tests;
+  - phpunit --configuration phpunit.xml
 
   # push code coverage to scrutinizer-ci
   - wget https://scrutinizer-ci.com/ocular.phar
