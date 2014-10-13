@@ -23,6 +23,7 @@
 
 namespace OCA\Web_Hooks\Tests;
 
+use OC\Files\View;
 use PHPUnit_Framework_TestCase;
 
 class Publisher extends PHPUnit_Framework_TestCase {
@@ -118,6 +119,38 @@ class Publisher extends PHPUnit_Framework_TestCase {
 		} else {
 			$this->assertEquals(0, count($receivedNotifications));
 		}
+	}
+
+	/**
+	 * @dataProvider eventForFileProvider
+	 *
+	 * @param $expectedNotifications
+	 * @param $fileName
+	 */
+	public function testEventForFile($expectedNotifications, $fileName) {
+		$viewMock = $this->getMock('\OC\Files\View', array('rename', 'normalizePath', 'getFileInfo', 'file_exists'), array(), '', false);
+		$viewMock->expects($this->any())
+			->method('normalizePath')
+			->will($this->returnArgument(0));
+		$viewMock->expects($this->any())
+			->method('rename')
+			->will($this->returnValue(true));
+		$publisher = new \OCA\Web_Hooks\Publisher(array(), $viewMock);
+		$receivedNotifications = array();
+		$publisher->addNotificationsFunction = function ($topic, $payload) use (&$receivedNotifications) {
+			$receivedNotifications[] = array($topic, $payload);
+		};
+
+		$publisher->pushFileChange('new', $fileName, array());
+
+		$this->assertEquals($expectedNotifications, count($receivedNotifications));
+	}
+
+	public function eventForFileProvider() {
+		return array(
+			array(1, 'test.txt'),
+			array(0, 'test.txt.part'),
+		);
 	}
 
 }

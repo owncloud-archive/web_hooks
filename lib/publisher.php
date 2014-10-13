@@ -39,7 +39,7 @@ class Publisher {
 	/**
 	 * @param array $barriers of given quota barriers which are to be used to fire a quota change
 	 */
-	public function __construct($barriers = null) {
+	public function __construct($barriers = null, $view = null) {
 		if (is_null($barriers)) {
 			$barriers = \OC_Config::getValue('webhook_barriers', array());
 		}
@@ -52,6 +52,11 @@ class Publisher {
 		$this->barriers = $barriers;
 		$this->notifications = new Notifications();
 		$this->subscriptions = new Subscriptions();
+
+		if (is_null($view)) {
+			$view = \OC\Files\Filesystem::getView();
+		}
+		$this->view = $view;
 	}
 
 	/**
@@ -63,9 +68,12 @@ class Publisher {
 	 */
 	public function pushFileChange($action, $path, $info = null) {
 
+		if (substr($path, - strlen('.part')) === '.part') {
+			return;
+		}
+
 		if (is_null($info)) {
-			$view = \OC\Files\Filesystem::getView();
-			$info = $view->getFileInfo($path);
+			$info = $this->view->getFileInfo($path);
 		}
 
 		$payload = array(
@@ -176,14 +184,13 @@ class Publisher {
 	}
 
 	private function resolveOwnerPath($path, $info) {
-		$view = \OC\Files\Filesystem::getView();
-		if (!$this->isShared($view, $path)) {
+		if (!$this->isShared($path)) {
 			return array(null, null, null);
 		}
 
 		if(isset($info['fileid'])) {
 			$fileId = $info['fileid'];
-			$owner = $view->getOwner($path);
+			$owner = $this->view->getOwner($path);
 			$ownerView = new View("/$owner/files");
 			$path = $ownerView->getPath($fileId);
 			return array($owner, $path, $info);
@@ -193,12 +200,11 @@ class Publisher {
 	}
 
 	/**
-	 * @param View $view
 	 * @param string $path
 	 * @return bool
 	 */
-	private function isShared($view, $path) {
-		list($storage, ) = $view->resolvePath($path);
+	private function isShared($path) {
+		list($storage, ) = $this->view->resolvePath($path);
 		/**
 		 * @var \OC\Files\Storage\Storage $storage
 		 */
