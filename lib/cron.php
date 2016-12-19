@@ -65,7 +65,7 @@ class Cron {
 		foreach($notifications as $notification) {
 			$subscriptionId = $notification['subscription_id'];
 			$subscriber = $this->subscriptions->getById($subscriptionId);
-			if (is_null($subscriber)) {
+			if (is_null($subscriber) || $subscriber === false) {
 				$this->log("Unknown subscriber: $subscriptionId");
 				$this->subscriptions->deleteById($subscriptionId);
 				$this->notifications->deleteById($notification['id']);
@@ -118,6 +118,6 @@ class Cron {
 	}
 
 	private function log($message) {
-		\OC_Log::write('webhooks', $message, \OC_Log::ERROR);
+		\OCP\Util::writeLog('webhooks', $message, \OCP\Util::ERROR);
 	}
 }

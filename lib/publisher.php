@@ -41,10 +41,10 @@ class Publisher {
 	 */
 	public function __construct($barriers = null, $view = null) {
 		if (is_null($barriers)) {
-			$barriers = \OC_Config::getValue('webhook_barriers', array());
+			$barriers = \OC::$server->getConfig()->getSystemValue('webhook_barriers', array());
 		}
 		if (!is_array($barriers)) {
-			\OC_Log::write('webhooks', "Invalid barriers given: $barriers", \OC_Log::ERROR);
+			\OCP\Util::writeLog('webhooks', "Invalid barriers given: $barriers", \OCP\Util::ERROR);
 			$barriers = array();
 		}
 		sort($barriers);

@@ -31,7 +31,7 @@ class Subscriptions {
 					(`' . implode('`, `', $queryParts) . '`)
 				VALUES (?,?,?)';
 		\OC_DB::executeAudited($sql, $params);
-		return \OC_DB::insertid('*PREFIX*hub_subscriptions');
+		return \OC::$server->getDatabaseConnection()->lastInsertId('*PREFIX*hub_subscriptions');
 	}
 
 	public function delete($callback, $topic) {
